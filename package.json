@@ -53,6 +53,7 @@
         "lucide-react": "^0.428.0",
         "next": "^15.0.0-rc.0",
         "next-themes": "^0.3.0",
+        "or": "^0.2.0",
         "prisma": "^5.18.0",
         "react": "^19.0.0-rc-a960b92c-20240819",
         "react-day-picker": "8.10.1",
@@ -84,5 +85,6 @@
     "engines": {
         "node": ">=18.0.0"
     },
-    "engineStrict": true
+    "engineStrict": true,
+    "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
