@@ -1,4 +1,4 @@
-import { StripeElement } from '@/components/global/stripe/elements'
+import { StripeElements } from '@/components/global/stripe/elements'
 import React from 'react'
 import PaymentForm from './payment-form'
 
@@ -14,13 +14,13 @@ const CreateGroup = ({
     stripeId
 } : Props) => {
   return (
-    <StripeElement>
+    <StripeElements>
         <PaymentForm
         userId={userId}
         affiliate={affiliate}
         stripeId={stripeId}
         />
-    </StripeElement>
+    </StripeElements>
   )
 }
 
