@@ -6,7 +6,7 @@ import {
     onGetGroupSubscriptions,
     onGetUserGroups,
 } from "@/actions/groups"
-import SideBar from "@/components/global/slidebar"
+import SideBar from "@/components/global/sidebar"
 import {
     dehydrate,
     HydrationBoundary,
@@ -14,6 +14,7 @@ import {
 } from "@tanstack/react-query"
 import { redirect } from "next/navigation"
 import React from "react"
+import { Navbar } from "../_components/navbar"
 
 type GroupLayoutProps = {
     children: React.ReactNode
@@ -60,6 +61,14 @@ const GroupLayout = async ({ children, params }: GroupLayoutProps) => {
                 <SideBar groupid={params.groupId} 
                 userid={user.id!}
                 />
+                <div className="md:ml-[300px] flex flex-col flex-1 bg-[#101011] md:rounded-tl-xl overflow-auto border-l-[1px] border-t-[1px] border-[#28282D]">
+                    <Navbar
+                    groupid={params.groupId}
+                    userid={user.id!}
+                    />
+                        {/* <MobileNav groupid={params.groupId} /> */}
+                   
+                </div>
             </div>
         </HydrationBoundary>
     )
