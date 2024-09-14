@@ -1,6 +1,6 @@
 import { onCreateNewChannel } from "@/actions/channel"
 import { onGetGroupChannels } from "@/actions/groups"
-import { IGroupInfo, IGroups } from "@/components/global/slidebar"
+import { IGroupInfo, IGroups } from "@/components/global/sidebar"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
