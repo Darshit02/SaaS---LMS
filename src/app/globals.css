@@ -73,7 +73,7 @@ html {
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border text-muted;
   }
   body {
     @apply bg-background text-foreground;
