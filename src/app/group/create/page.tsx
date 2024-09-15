@@ -37,7 +37,7 @@ const GroupCreatepage = async ({
                                 alt="avatar"
                             />
                             <AvatarFallback>
-                              <User/>
+                                <User />
                             </AvatarFallback>
                         </Avatar>
                         {affiliate.user?.Group?.User.firstname}{" "}
@@ -46,9 +46,9 @@ const GroupCreatepage = async ({
                 )}
             </div>
             <CreateGroup
-            userId={user.id}
-            affiliate={affiliate.status === 200 ? true : false}
-            stripeId={affiliate.user?.Group?.User.stripeId || ""}
+                userId={user.id}
+                affiliate={affiliate.status === 200 ? true : false}
+                stripeId={affiliate.user?.Group?.User.stripeId || ""}
             />
         </>
     )
