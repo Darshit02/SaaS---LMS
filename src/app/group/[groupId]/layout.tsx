@@ -15,6 +15,7 @@ import {
 import { redirect } from "next/navigation"
 import React from "react"
 import { Navbar } from "../_components/navbar"
+import MobileNav from "./_components/mobile-nav"
 
 type GroupLayoutProps = {
     children: React.ReactNode
@@ -66,7 +67,8 @@ const GroupLayout = async ({ children, params }: GroupLayoutProps) => {
                     groupid={params.groupId}
                     userid={user.id!}
                     />
-                        {/* <MobileNav groupid={params.groupId} /> */}
+                    {children}
+                    <MobileNav groupid={params.groupId} />
                    
                 </div>
             </div>
