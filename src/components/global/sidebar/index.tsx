@@ -68,7 +68,7 @@ const SideBar = ({ groupid, userid, mobile }: Props) => {
             className={cn(
                 "h-screen flex-col gap-y-10 sm:px-5 ",
                 !mobile
-                    ? "hidden bg-black md:w-[300px] fixed md:flex"
+                    ? "hidden bg-black md:w-[300px] fixed md:flex text-muted"
                     : "w-full flex",
             )}
         >
@@ -102,7 +102,7 @@ const SideBar = ({ groupid, userid, mobile }: Props) => {
                             >
                                 <Button
                                     variant="ghost"
-                                    className="flex gap-2 w-full justify-start hover:text-muted hover:bg-themeGray items-center"
+                                    className="flex text-muted gap-2 w-full justify-start hover:text-muted hover:bg-themeGray items-center"
                                 >
                                     <Group />
                                     {item.name}

@@ -1,14 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactProductionProfiling: false,
-    images: {
-        remotePatterns: [
+    reactProductionProfiling : false,
+    images : {
+        remotePatterns : [
             {
-                protocol: "https",
-                hostname: "ucarecdn.com",
-            },
-        ],
-    },
+                protocol : 'https',
+                hostname : "ucarecdn.com",
+            }
+        ]
+    }
 }
 
 export default nextConfig
