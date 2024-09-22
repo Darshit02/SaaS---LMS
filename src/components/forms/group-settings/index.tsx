@@ -32,7 +32,7 @@ const GroupSettingsForm = ({
       console.log(data?.group, onJsonDescription)   
   return (
     <form
-    className='flex flex-col h-full text-muted w-full items-start gap-y-5'
+    className='flex flex-col h-full  w-full items-start gap-y-5'
     onSubmit={onUpdate}
     >
       <div className="flex 2xl:flex-row flex-col gap-10">
