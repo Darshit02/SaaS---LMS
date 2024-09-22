@@ -92,7 +92,7 @@ const PaymentForm = ({ userId, affiliate, stripeId }: Props) => {
           <Button
             variant="outline"
             type="submit"
-            className="bg-themeBlack border-themeGray text-muted rounded-xl"
+            className="bg-themeBlack border-themeGray rounded-xl"
           >
             <Loader loading={isPending}>Get Started</Loader>
           </Button>

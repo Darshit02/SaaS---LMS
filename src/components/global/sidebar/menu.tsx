@@ -135,7 +135,7 @@ const SideBarMenu = ({
                       <Input
                         type="text"
                         ref={inputRef}
-                        className="bg-transparent text-muted p-0 text-lg m-0 h-full"
+                        className="bg-transparent   p-0 text-lg m-0 h-full"
                       />
                     ) : (
                       <p

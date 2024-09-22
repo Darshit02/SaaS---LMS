@@ -17,6 +17,8 @@ import React from "react"
 import { Navbar } from "../_components/navbar"
 import MobileNav from "./_components/mobile-nav"
 
+
+
 type GroupLayoutProps = {
     children: React.ReactNode
     params: {
@@ -68,8 +70,7 @@ const GroupLayout = async ({ children, params }: GroupLayoutProps) => {
                     userid={user.id!}
                     />
                     {children}
-                    <MobileNav groupid={params.groupId} />
-                   
+                    <MobileNav groupid={params.groupId} />  
                 </div>
             </div>
         </HydrationBoundary>
