@@ -1,12 +1,12 @@
 "use client"
-import { onGetExploreGroup, onGetGroupInfo, onSearchGroups, onUpDateGroupSettings } from "@/actions/groups"
+import { onGetExploreGroup, onGetGroupInfo, onGetGroupSubscriptions, onSearchGroups, onUpdateGroupGallery, onUpDateGroupSettings } from "@/actions/groups"
 import { GroupSettingsSchema } from "@/components/forms/group-settings/schema"
 import { supabaseClient, validateURLString } from "@/lib/utils"
 import { onOnline } from "@/redux/slices/online-member-slice"
 import { GroupStateProps, onClearSearch, onSearch } from "@/redux/slices/search-slice"
 import { AppDispatch } from "@/redux/store"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -16,6 +16,8 @@ import { z } from "zod"
 import { JSONContent } from "novel"
 import { upload } from "@/lib/upload-care"
 import { onClearList, onInfiniteScroll } from "@/redux/slices/infinite-scroll-slice"
+import { UpdateGallerySchema } from "@/components/forms/media-gallery/schema"
+import { onActivateSubscription } from "@/actions/payment"
 
 export const useGroupChatOnline = (userid: string) => {
     const dispatch: AppDispatch = useDispatch()
@@ -489,4 +491,88 @@ export const useGroupChatOnline = (userid: string) => {
       onUpdateDescription,
       isPending,
     }
+  }
+
+  export const useMediaGallery = (groupid: string) => {
+    const {
+      register,
+      formState: { errors },
+      handleSubmit,
+    } = useForm<z.infer<typeof UpdateGallerySchema>>({
+      resolver: zodResolver(UpdateGallerySchema),
+    })
+  
+    const { mutate, isPending } = useMutation({
+      mutationKey: ["update-gallery"],
+      mutationFn: async (values: z.infer<typeof UpdateGallerySchema>) => {
+        if (values.videourl) {
+          const update = await onUpdateGroupGallery(groupid, values.videourl)
+          if (update && update.status !== 200) {
+            return toast("Error", {
+              description: update?.message,
+            })
+          }
+        }
+        if (values.image && values.image.length) {
+          let count = 0
+          while (count < values.image.length) {
+            const uploaded = await upload.uploadFile(values.image[count])
+            if (uploaded) {
+              const update = await onUpdateGroupGallery(groupid, uploaded.uuid)
+              if (update?.status !== 200) {
+                toast("Error", {
+                  description: update?.message,
+                })
+                break
+              }
+            } else {
+              toast("Error", {
+                description: "Looks like something went wrong!",
+              })
+              break
+            }
+            console.log("increment")
+            count++
+          }
+        }
+  
+        return toast("Success", {
+          description: "Group gallery updated",
+        })
+      },
+    })
+  
+    const onUpdateGallery = handleSubmit(async (values) => mutate(values))
+  
+    return {
+      register,
+      errors,
+      onUpdateGallery,
+      isPending,
+    }
+  }
+  
+
+  export const useAllSubscriptions = (groupid: string) => {
+    const { data } = useQuery({
+      queryKey: ["group-subscriptions"],
+      queryFn: () => onGetGroupSubscriptions(groupid),
+    })
+  
+    const client = useQueryClient()
+  
+    const { mutate } = useMutation({
+      mutationFn: (data: { id: string }) => onActivateSubscription(data.id),
+      onSuccess: (data) =>
+        toast(data?.status === 200 ? "Success" : "Error", {
+          description: data?.message,
+        }),
+      onSettled: async () => {
+        return await client.invalidateQueries({
+          queryKey: ["group-subscriptions"],
+        })
+      },
+    })
+  
+    return { data, mutate }
   }

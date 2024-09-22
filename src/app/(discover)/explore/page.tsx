@@ -4,6 +4,7 @@ import {
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query"
+import ExplorePageContent from "./_components/explore-content"
 
 type Props = {}
 
@@ -27,7 +28,7 @@ const ExplorePage = async (props: Props) => {
 
   return (
     <HydrationBoundary state={dehydrate(query)}>
-      {/* <ExplorePageContent layout="SLIDER" /> */}
+      <ExplorePageContent layout="SLIDER" />
     </HydrationBoundary>
   )
 }
