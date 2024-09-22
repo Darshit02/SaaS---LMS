@@ -2,7 +2,6 @@ import GradientText from '@/components/global/gradient-text'
 import { Button } from '@/components/ui/button'
 import { BadgePlus } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
 
 type Props = {}
 
@@ -15,7 +14,7 @@ const CallToAction = (props: Props) => {
       >
         Bringing Communities <br className="md:hidden" /> Together
       </GradientText>
-      <p className="text-sm md:text-center text-left text-muted-foreground">
+      <p className="text-sm md:text-center text-left -foreground">
         Grouple is a vibrant community platform that 
         <br className='md:hidden'/>
         people to connect, <br className="hidden md:block" />{" "}
@@ -26,7 +25,7 @@ const CallToAction = (props: Props) => {
       <div className="flex md:flex-row flex-col md:justify-center gap-5 md:mt-5 w-full">
         <Button
           variant="outline"
-          className="rounded-xl bg-transparent text-base text-muted"
+          className="rounded-xl bg-transparent text-base"
         >
           Watch Demo
          </Button>

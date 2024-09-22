@@ -16,7 +16,7 @@ export const GroupListItem = ({
   return (
     <div
       className={cn(
-        "flex  gap-3 items-center text-muted py-2 px-4 rounded-2xl bg-themeGray border-2 cursor-pointer",
+        "flex  gap-3 my-2 items-center py-2 px-4 rounded-2xl bg-themeGray border-2 cursor-pointer",
         selected === label ? "border border-themeTextGray" : "border-themeGray",
       )}
     >

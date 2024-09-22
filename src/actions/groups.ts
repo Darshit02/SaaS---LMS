@@ -1,142 +1,138 @@
 "use server"
 import { CreateGroupSchema } from "@/components/forms/create-group/schema"
 import { client } from "@/lib/prisma"
-import { z } from "zod"
-import { v4 as uuidv4 } from "uuid"
-import { onAuthenticatedUser } from "./auth"
+import axios from "axios"
 import { revalidatePath } from "next/cache"
+import { v4 as uuidv4 } from "uuid"
+import { z } from "zod"
+import { onAuthenticatedUser } from "./auth"
 
 export const onGetAffiliateInfo = async (id: string) => {
-    try {
-        const affiliateInfo = await client.affiliate.findUnique({
-            where: {
-                id,
+  try {
+    const affiliateInfo = await client.affiliate.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        Group: {
+          select: {
+            User: {
+              select: {
+                firstname: true,
+                lastname: true,
+                image: true,
+                id: true,
+                stripeId: true,
+              },
             },
-            select: {
-                Group: {
-                    select: {
-                        User: {
-                            select: {
-                                firstname: true,
-                                lastname: true,
-                                image: true,
-                                id: true,
-                                stripeId: true,
-                            },
-                        },
-                    },
-                },
-            },
-        })
-        if (affiliateInfo) {
-            return {
-                status: 200,
-                user: affiliateInfo,
-            }
-        }
-        return {
-            status: 404,
-        }
-    } catch (error) {
-        return {
-            status: 400,
-        }
+          },
+        },
+      },
+    })
+
+    if (affiliateInfo) {
+      return { status: 200, user: affiliateInfo }
     }
+
+    return { status: 404 }
+  } catch (error) {
+    return { status: 400 }
+  }
 }
 
 export const onCreateNewGroup = async (
-    userId: string,
-    data: z.infer<typeof CreateGroupSchema>,
-  ) => {
-    try {
-      const created = await client.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          group: {
-            create: {
-              ...data,
-              affiliate: {
-                create: {},
+  userId: string,
+  data: z.infer<typeof CreateGroupSchema>,
+) => {
+  try {
+    const created = await client.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        group: {
+          create: {
+            ...data,
+            affiliate: {
+              create: {},
+            },
+            member: {
+              create: {
+                userId: userId,
               },
-              member: {
-                create: {
-                  userId: userId,
+            },
+            channel: {
+              create: [
+                {
+                  id: uuidv4(),
+                  name: "general",
+                  icon: "general",
                 },
+                {
+                  id: uuidv4(),
+                  name: "announcements",
+                  icon: "announcement",
+                },
+              ],
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        group: {
+          select: {
+            id: true,
+            channel: {
+              select: {
+                id: true,
               },
-              channel: {
-                create: [
-                  {
-                    id: uuidv4(),
-                    name: "general",
-                    icon: "general",
-                  },
-                  {
-                    id: uuidv4(),
-                    name: "announcements",
-                    icon: "announcement",
-                  },
-                ],
+              take: 1,
+              orderBy: {
+                createdAt: "asc",
               },
             },
           },
         },
-        select: {
-          id: true,
-          group: {
-            select: {
-              id: true,
-              channel: {
-                select: {
-                  id: true,
-                },
-                take: 1,
-                orderBy: {
-                  createdAt: "asc",
-                },
-              },
-            },
-          },
-        },
-      })
-  
-      if (created) {
-        return {
-          status: 200,
-          data: created,
-          message: "Group created successfully",
-        }
-      }
-    } catch (error) {
+      },
+    })
+
+    if (created) {
       return {
-        status: 400,
-        message: "Oops! group creation failed, try again later",
+        status: 200,
+        data: created,
+        message: "Group created successfully",
       }
+    }
+  } catch (error) {
+    return {
+      status: 400,
+      message: "Oops! group creation failed, try again later",
     }
   }
-  
-export const onGetGroupInfo = async (groupId: string) => {
-try {
-  const user = await onAuthenticatedUser()
-  const group = await client.group.findUnique({
-where : {
-  id : groupId
-},
-  })
-
-  if(group)
-    return {
-      status : 200,
-      group,
-      groupOwner : user.id === group.userId ? true : false,
-    }
-    return { status : 404 }
-} catch (error) {
-  return { status : 400 }
-}
 }
 
+export const onGetGroupInfo = async (groupid: string) => {
+  try {
+    const user = await onAuthenticatedUser()
+    const group = await client.group.findUnique({
+      where: {
+        id: groupid,
+      },
+    })
+
+    if (group)
+      return {
+        status: 200,
+        group,
+        groupOwner: user.id === group.userId ? true : false,
+      }
+
+    return { status: 404 }
+  } catch (error) {
+    return { status: 400 }
+  }
+}
 
 export const onGetUserGroups = async (id: string) => {
   try {
@@ -197,7 +193,6 @@ export const onGetUserGroups = async (id: string) => {
     return { status: 400 }
   }
 }
-
 
 export const onGetGroupChannels = async (groupid: string) => {
   try {
@@ -379,5 +374,358 @@ export const onUpDateGroupSettings = async (
   } catch (error) {
     console.log(error)
     return { status: 400 }
+  }
+}
+
+export const onGetExploreGroup = async (category: string, paginate: number) => {
+  try {
+    const groups = await client.group.findMany({
+      where: {
+        category,
+        NOT: {
+          description: null,
+          thumbnail: null,
+        },
+      },
+      take: 6,
+      skip: paginate,
+    })
+
+    if (groups && groups.length > 0) {
+      return { status: 200, groups }
+    }
+
+    return {
+      status: 404,
+      message: "No groups found for this category",
+    }
+  } catch (error) {
+    return {
+      status: 400,
+      message: "Oops! something went wrong",
+    }
+  }
+}
+
+export const onGetPaginatedPosts = async (
+  identifier: string,
+  paginate: number,
+) => {
+  try {
+    const user = await onAuthenticatedUser()
+    const posts = await client.post.findMany({
+      where: {
+        channelId: identifier,
+      },
+      skip: paginate,
+      take: 2,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        channel: {
+          select: {
+            name: true,
+          },
+        },
+        author: {
+          select: {
+            firstname: true,
+            lastname: true,
+            image: true,
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+          },
+        },
+        likes: {
+          where: {
+            userId: user.id!,
+          },
+          select: {
+            userId: true,
+            id: true,
+          },
+        },
+      },
+    })
+
+    if (posts && posts.length > 0) return { status: 200, posts }
+
+    return { status: 404 }
+  } catch (error) {
+    return { status: 400 }
+  }
+}
+
+export const onUpdateGroupGallery = async (
+  groupid: string,
+  content: string,
+) => {
+  try {
+    const mediaLimit = await client.group.findUnique({
+      where: {
+        id: groupid,
+      },
+      select: {
+        gallery: true,
+      },
+    })
+
+    if (mediaLimit && mediaLimit?.gallery.length < 6) {
+      await client.group.update({
+        where: {
+          id: groupid,
+        },
+        data: {
+          gallery: {
+            push: content,
+          },
+        },
+      })
+      revalidatePath(`/about/${groupid}`)
+      return { status: 200 }
+    }
+
+    return {
+      status: 400,
+      message: "Looks like your gallery has the maximum media allowed",
+    }
+  } catch (error) {
+    return { status: 400, message: "Looks like something went wrong" }
+  }
+}
+
+export const onJoinGroup = async (groupid: string) => {
+  try {
+    const user = await onAuthenticatedUser()
+    const member = await client.group.update({
+      where: {
+        id: groupid,
+      },
+      data: {
+        member: {
+          create: {
+            userId: user.id,
+          },
+        },
+      },
+    })
+    if (member) {
+      return { status: 200 }
+    }
+  } catch (error) {
+    return { status: 404 }
+  }
+}
+
+export const onGetAffiliateLink = async (groupid: string) => {
+  try {
+    const affiliate = await client.affiliate.findUnique({
+      where: {
+        groupId: groupid,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    return { status: 200, affiliate }
+  } catch (error) {
+    return { status: 400, message: "Oops! soomething went wrong" }
+  }
+}
+
+export const onVerifyAffilateLink = async (id: string) => {
+  try {
+    const link = await client.affiliate.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (link) {
+      return { status: 200 }
+    }
+
+    return { status: 404 }
+  } catch (error) {
+    return { status: 400 }
+  }
+}
+
+export const onGetUserFromMembership = async (membershipid: string) => {
+  try {
+    const member = await client.members.findUnique({
+      where: {
+        id: membershipid,
+      },
+      select: {
+        User: true,
+      },
+    })
+
+    if (member) {
+      return { status: 200, member }
+    }
+  } catch (error) {
+    return { status: 400 }
+  }
+}
+
+export const onGetAllUserMessages = async (recieverId: string) => {
+  try {
+    const sender = await onAuthenticatedUser()
+    const messages = await client.message.findMany({
+      where: {
+        senderid: {
+          in: [sender.id!, recieverId],
+        },
+        recieverId: {
+          in: [sender.id!, recieverId],
+        },
+      },
+    })
+
+    if (messages && messages.length > 0) {
+      return { status: 200, messages }
+    }
+
+    return { status: 404 }
+  } catch (error) {
+    return { status: 400, message: "Oops something went wrong" }
+  }
+}
+
+export const onSendMessage = async (
+  recieverid: string,
+  messageid: string,
+  message: string,
+) => {
+  try {
+    const user = await onAuthenticatedUser()
+    const newMessage = await client.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        message: {
+          create: {
+            id: messageid,
+            recieverId: recieverid,
+            message,
+          },
+        },
+      },
+    })
+
+    if (newMessage) {
+      return { status: 200 }
+    }
+  } catch (error) {
+    return { status: 400 }
+  }
+}
+
+export const onGetPostInfo = async (postid: string) => {
+  try {
+    const user = await onAuthenticatedUser()
+    const post = await client.post.findUnique({
+      where: {
+        id: postid,
+      },
+      include: {
+        channel: {
+          select: {
+            name: true,
+          },
+        },
+        author: {
+          select: {
+            firstname: true,
+            lastname: true,
+            image: true,
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+          },
+        },
+        likes: {
+          where: {
+            userId: user.id!,
+          },
+          select: {
+            userId: true,
+            id: true,
+          },
+        },
+        comments: true,
+      },
+    })
+
+    if (post) return { status: 200, post }
+
+    return { status: 404, message: "No post found" }
+  } catch (error) {
+    return { status: 400, message: "Oops! something went wrong" }
+  }
+}
+
+export const onGetPostComments = async (postid: string) => {
+  try {
+    const comments = await client.comment.findMany({
+      where: {
+        postId: postid,
+        replied: false,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        user: true,
+        _count: {
+          select: {
+            reply: true,
+          },
+        },
+      },
+    })
+
+    if (comments && comments.length > 0) {
+      return { status: 200, comments }
+    }
+  } catch (error) {
+    return { status: 400 }
+  }
+}
+
+export const onGetCommentReplies = async (commentid: string) => {
+  try {
+    const replies = await client.comment.findUnique({
+      where: {
+        id: commentid,
+      },
+      select: {
+        reply: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    })
+
+    if (replies && replies.reply.length > 0) {
+      return { status: 200, replies: replies.reply }
+    }
+
+    return { status: 404, message: "No replies found" }
+  } catch (error) {
+    return { status: 400, message: "Oops something went wrong" }
   }
 }

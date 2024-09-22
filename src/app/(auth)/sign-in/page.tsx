@@ -22,7 +22,7 @@ const SignIn = (props: Props) => {
       <Separator orientation="horizontal" className="bg-themeGray" />
     </div>
     <GoogleAuthButton method="signin" />
-    <p className="text-muted mt-3 mb-1 text-center">
+    <p className=" mt-3 mb-1 text-center">
         If you dont have an account, you can{" "}
         <Link href={"/sign-up"} className='underline'>signup</Link> here.
       </p>

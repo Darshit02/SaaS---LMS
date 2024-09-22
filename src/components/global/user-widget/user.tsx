@@ -12,47 +12,55 @@ import { useDispatch } from "react-redux"
 import DropDown from "../drop-down"
 
 type UserWidgetProps = {
-  image: string
-  groupid?: string
-  userid?: string
+    image: string
+    groupid?: string
+    userid?: string
 }
 
 export const UserAvatar = ({ image, groupid, userid }: UserWidgetProps) => {
-  const { signOut } = useClerk()
+    const { signOut } = useClerk()
 
-  const untrackPresence = async () => {
-    await supabaseClient.channel("tracking").untrack()
-  }
+    const untrackPresence = async () => {
+        await supabaseClient.channel("tracking").untrack()
+    }
 
-  const dispatch: AppDispatch = useDispatch()
+    const dispatch: AppDispatch = useDispatch()
 
-  const onLogout = async () => {
-    untrackPresence()
-    dispatch(onOffline({ members: [{ id: userid! }] }))
-    signOut({ redirectUrl: "/" })
-  }
+    const onLogout = async () => {
+        untrackPresence()
+        dispatch(onOffline({ members: [{ id: userid! }] }))
+        signOut({ redirectUrl: "/" })
+    }
 
-  return (
-    <DropDown 
-      title="Account"
-      trigger={
-        <Avatar className="cursor-pointer">
-          <AvatarImage src={image} alt="user" />
-          <AvatarFallback>U</AvatarFallback>
-        </Avatar>
-      }
-    >
-      <Link href={`/group/${groupid}/settings`} className="flex gap-x-2 px-2 text-muted">
-        <Settings /> Settings
-      </Link>
-      <Button
-        onClick={onLogout}
-        variant="ghost"
-        className="flex gap-x-3 px-2 text-muted hover:text-black  justify-start w-full"
-      >
-        <Logout />
-        Logout
-      </Button>
-    </DropDown>
-  )
+    return (
+        <DropDown
+            title="Account"
+            trigger={
+                <Avatar className="cursor-pointer">
+                    <AvatarImage src={image} alt="user" />
+                    <AvatarFallback>U</AvatarFallback>
+                </Avatar>
+            }
+        >
+            <Button
+                variant="ghost"
+                className="flex gap-x-3 px-2  hover:text-black  justify-start w-full"
+            >
+                <Link
+                    href={`/group/${groupid}/settings`}
+                    className="flex gap-2 "
+                >
+                    <Settings /> Settings
+                </Link>
+            </Button>
+            <Button
+                onClick={onLogout}
+                variant="ghost"
+                className="flex gap-x-3 px-2  hover:text-black  justify-start w-full"
+            >
+                <Logout />
+                Logout
+            </Button>
+        </DropDown>
+    )
 }
