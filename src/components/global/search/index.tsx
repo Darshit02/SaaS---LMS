@@ -38,7 +38,7 @@ const Search = ({
       <Input
         onChange={onSearchQuery}
         value={query}
-        className={cn("bg-transparent border-0 border-none focus:right-0 focus:ring-0 text-muted ", inputStyle)}
+        className={cn("bg-transparent border-0 border-none focus:right-0 focus:ring-0", inputStyle)}
         placeholder={placeholder}
         type="text"
       />
