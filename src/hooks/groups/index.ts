@@ -1,23 +1,23 @@
 "use client"
 import { onGetExploreGroup, onGetGroupInfo, onGetGroupSubscriptions, onSearchGroups, onUpdateGroupGallery, onUpDateGroupSettings } from "@/actions/groups"
+import { onActivateSubscription } from "@/actions/payment"
 import { GroupSettingsSchema } from "@/components/forms/group-settings/schema"
+import { UpdateGallerySchema } from "@/components/forms/media-gallery/schema"
+import { upload } from "@/lib/upload-care"
 import { supabaseClient, validateURLString } from "@/lib/utils"
+import { onClearList, onInfiniteScroll } from "@/redux/slices/infinite-scroll-slice"
 import { onOnline } from "@/redux/slices/online-member-slice"
 import { GroupStateProps, onClearSearch, onSearch } from "@/redux/slices/search-slice"
 import { AppDispatch } from "@/redux/store"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
+import { JSONContent } from "novel"
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useDispatch } from "react-redux"
 import { toast } from "sonner"
 import { z } from "zod"
-import { JSONContent } from "novel"
-import { upload } from "@/lib/upload-care"
-import { onClearList, onInfiniteScroll } from "@/redux/slices/infinite-scroll-slice"
-import { UpdateGallerySchema } from "@/components/forms/media-gallery/schema"
-import { onActivateSubscription } from "@/actions/payment"
 
 export const useGroupChatOnline = (userid: string) => {
     const dispatch: AppDispatch = useDispatch()
@@ -108,10 +108,10 @@ export const useGroupChatOnline = (userid: string) => {
     return { query, onSearchQuery }
   }
   
-  export const useGroupSettings = (groupid: string) => {
+  export const useGroupSettings = (groupId: string) => {
     const { data } = useQuery({
       queryKey: ["group-info"],
-      queryFn: () => onGetGroupInfo(groupid),
+      queryFn: () => onGetGroupInfo(groupId),
     })
   
     const jsonContent = data?.group?.jsonDescription
@@ -174,10 +174,10 @@ export const useGroupChatOnline = (userid: string) => {
         if (values.thumbnail && values.thumbnail.length > 0) {
           const uploaded = await upload.uploadFile(values.thumbnail[0])
           const updated = await onUpDateGroupSettings(
-            groupid,
+            groupId,
             "IMAGE",
             uploaded.uuid,
-            `/group/${groupid}/settings`,
+            `/group/${groupId}/settings`,
           )
           if (updated.status !== 200) {
             return toast("Error", {
@@ -189,10 +189,10 @@ export const useGroupChatOnline = (userid: string) => {
           console.log("icon")
           const uploaded = await upload.uploadFile(values.icon[0])
           const updated = await onUpDateGroupSettings(
-            groupid,
+            groupId,
             "ICON",
             uploaded.uuid,
-            `/group/${groupid}/settings`,
+            `/group/${groupId}/settings`,
           )
           if (updated.status !== 200) {
             return toast("Error", {
@@ -202,10 +202,10 @@ export const useGroupChatOnline = (userid: string) => {
         }
         if (values.name) {
           const updated = await onUpDateGroupSettings(
-            groupid,
+            groupId,
             "NAME",
             values.name,
-            `/group/${groupid}/settings`,
+            `/group/${groupId}/settings`,
           )
           if (updated.status !== 200) {
             return toast("Error", {
@@ -217,10 +217,10 @@ export const useGroupChatOnline = (userid: string) => {
   
         if (values.description) {
           const updated = await onUpDateGroupSettings(
-            groupid,
+            groupId,
             "DESCRIPTION",
             values.description,
-            `/group/${groupid}/settings`,
+            `/group/${groupId}/settings`,
           )
           if (updated.status !== 200) {
             return toast("Error", {
@@ -230,10 +230,10 @@ export const useGroupChatOnline = (userid: string) => {
         }
         if (values.jsondescription) {
           const updated = await onUpDateGroupSettings(
-            groupid,
+            groupId,
             "JSONDESCRIPTION",
             values.jsondescription,
-            `/group/${groupid}/settings`,
+            `/group/${groupId}/settings`,
           )
           if (updated.status !== 200) {
             return toast("Error", {
@@ -341,7 +341,7 @@ export const useGroupChatOnline = (userid: string) => {
     jsonDescription: string | null,
     htmlDescription: string | null,
     currentMedia: string,
-    groupid: string,
+    groupId: string,
   ) => {
     const editor = useRef<HTMLFormElement | null>(null)
     const mediaType = validateURLString(currentMedia)
@@ -419,10 +419,10 @@ export const useGroupChatOnline = (userid: string) => {
       mutationFn: async (values: z.infer<typeof GroupSettingsSchema>) => {
         if (values.description) {
           const updated = await onUpDateGroupSettings(
-            groupid,
+            groupId,
             "DESCRIPTION",
             values.description,
-            `/about/${groupid}`,
+            `/about/${groupId}`,
           )
           if (updated.status !== 200) {
             return toast("Error", {
@@ -432,10 +432,10 @@ export const useGroupChatOnline = (userid: string) => {
         }
         if (values.jsondescription) {
           const updated = await onUpDateGroupSettings(
-            groupid,
+            groupId,
             "JSONDESCRIPTION",
             values.jsondescription,
-            `/about/${groupid}`,
+            `/about/${groupId}`,
           )
           if (updated.status !== 200) {
             return toast("Error", {
@@ -445,10 +445,10 @@ export const useGroupChatOnline = (userid: string) => {
         }
         if (values.htmldescription) {
           const updated = await onUpDateGroupSettings(
-            groupid,
+            groupId,
             "HTMLDESCRIPTION",
             values.htmldescription,
-            `/about/${groupid}`,
+            `/about/${groupId}`,
           )
           if (updated.status !== 200) {
             return toast("Error", {
@@ -493,7 +493,7 @@ export const useGroupChatOnline = (userid: string) => {
     }
   }
 
-  export const useMediaGallery = (groupid: string) => {
+  export const useMediaGallery = (groupId: string) => {
     const {
       register,
       formState: { errors },
@@ -506,7 +506,7 @@ export const useGroupChatOnline = (userid: string) => {
       mutationKey: ["update-gallery"],
       mutationFn: async (values: z.infer<typeof UpdateGallerySchema>) => {
         if (values.videourl) {
-          const update = await onUpdateGroupGallery(groupid, values.videourl)
+          const update = await onUpdateGroupGallery(groupId, values.videourl)
           if (update && update.status !== 200) {
             return toast("Error", {
               description: update?.message,
@@ -518,7 +518,7 @@ export const useGroupChatOnline = (userid: string) => {
           while (count < values.image.length) {
             const uploaded = await upload.uploadFile(values.image[count])
             if (uploaded) {
-              const update = await onUpdateGroupGallery(groupid, uploaded.uuid)
+              const update = await onUpdateGroupGallery(groupId, uploaded.uuid)
               if (update?.status !== 200) {
                 toast("Error", {
                   description: update?.message,
@@ -553,10 +553,10 @@ export const useGroupChatOnline = (userid: string) => {
   }
   
 
-  export const useAllSubscriptions = (groupid: string) => {
+  export const useAllSubscriptions = (groupId: string) => {
     const { data } = useQuery({
       queryKey: ["group-subscriptions"],
-      queryFn: () => onGetGroupSubscriptions(groupid),
+      queryFn: () => onGetGroupSubscriptions(groupId),
     })
   
     const client = useQueryClient()

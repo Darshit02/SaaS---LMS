@@ -1,7 +1,6 @@
 "use server"
 import { CreateGroupSchema } from "@/components/forms/create-group/schema"
 import { client } from "@/lib/prisma"
-import axios from "axios"
 import { revalidatePath } from "next/cache"
 import { v4 as uuidv4 } from "uuid"
 import { z } from "zod"
@@ -112,12 +111,12 @@ export const onCreateNewGroup = async (
   }
 }
 
-export const onGetGroupInfo = async (groupid: string) => {
+export const onGetGroupInfo = async (groupId: string) => {
   try {
     const user = await onAuthenticatedUser()
     const group = await client.group.findUnique({
       where: {
-        id: groupid,
+        id: groupId,
       },
     })
 
@@ -194,11 +193,11 @@ export const onGetUserGroups = async (id: string) => {
   }
 }
 
-export const onGetGroupChannels = async (groupid: string) => {
+export const onGetGroupChannels = async (groupId: string) => {
   try {
     const channels = await client.channel.findMany({
       where: {
-        groupId: groupid,
+        groupId: groupId,
       },
       orderBy: {
         createdAt: "asc",
@@ -211,11 +210,11 @@ export const onGetGroupChannels = async (groupid: string) => {
   }
 }
 
-export const onGetGroupSubscriptions = async (groupid: string) => {
+export const onGetGroupSubscriptions = async (groupId: string) => {
   try {
     const subscriptions = await client.subscription.findMany({
       where: {
-        groupId: groupid,
+        groupId: groupId,
       },
       orderBy: {
         createdAt: "desc",
@@ -224,7 +223,7 @@ export const onGetGroupSubscriptions = async (groupid: string) => {
 
     const count = await client.members.count({
       where: {
-        groupId: groupid,
+        groupId: groupId,
       },
     })
 
@@ -236,12 +235,12 @@ export const onGetGroupSubscriptions = async (groupid: string) => {
   }
 }
 
-export const onGetAllGroupMembers = async (groupid: string) => {
+export const onGetAllGroupMembers = async (groupId: string) => {
   try {
     const user = await onAuthenticatedUser()
     const members = await client.members.findMany({
       where: {
-        groupId: groupid,
+        groupId: groupId,
         NOT: {
           userId: user.id,
         },
@@ -296,7 +295,7 @@ export const onSearchGroups = async (
 }
 
 export const onUpDateGroupSettings = async (
-  groupid: string,
+  groupId: string,
   type:
     | "IMAGE"
     | "ICON"
@@ -311,7 +310,7 @@ export const onUpDateGroupSettings = async (
     if (type === "IMAGE") {
       await client.group.update({
         where: {
-          id: groupid,
+          id: groupId,
         },
         data: {
           thumbnail: content,
@@ -321,7 +320,7 @@ export const onUpDateGroupSettings = async (
     if (type === "ICON") {
       await client.group.update({
         where: {
-          id: groupid,
+          id: groupId,
         },
         data: {
           icon: content,
@@ -332,7 +331,7 @@ export const onUpDateGroupSettings = async (
     if (type === "DESCRIPTION") {
       await client.group.update({
         where: {
-          id: groupid,
+          id: groupId,
         },
         data: {
           description: content,
@@ -342,7 +341,7 @@ export const onUpDateGroupSettings = async (
     if (type === "NAME") {
       await client.group.update({
         where: {
-          id: groupid,
+          id: groupId,
         },
         data: {
           name: content,
@@ -352,7 +351,7 @@ export const onUpDateGroupSettings = async (
     if (type === "JSONDESCRIPTION") {
       await client.group.update({
         where: {
-          id: groupid,
+          id: groupId,
         },
         data: {
           jsonDescription: content,
@@ -362,7 +361,7 @@ export const onUpDateGroupSettings = async (
     if (type === "HTMLDESCRIPTION") {
       await client.group.update({
         where: {
-          id: groupid,
+          id: groupId,
         },
         data: {
           htmlDescription: content,
@@ -462,13 +461,13 @@ export const onGetPaginatedPosts = async (
 }
 
 export const onUpdateGroupGallery = async (
-  groupid: string,
+  groupId: string,
   content: string,
 ) => {
   try {
     const mediaLimit = await client.group.findUnique({
       where: {
-        id: groupid,
+        id: groupId,
       },
       select: {
         gallery: true,
@@ -478,7 +477,7 @@ export const onUpdateGroupGallery = async (
     if (mediaLimit && mediaLimit?.gallery.length < 6) {
       await client.group.update({
         where: {
-          id: groupid,
+          id: groupId,
         },
         data: {
           gallery: {
@@ -486,7 +485,7 @@ export const onUpdateGroupGallery = async (
           },
         },
       })
-      revalidatePath(`/about/${groupid}`)
+      revalidatePath(`/about/${groupId}`)
       return { status: 200 }
     }
 
@@ -499,12 +498,12 @@ export const onUpdateGroupGallery = async (
   }
 }
 
-export const onJoinGroup = async (groupid: string) => {
+export const onJoinGroup = async (groupId: string) => {
   try {
     const user = await onAuthenticatedUser()
     const member = await client.group.update({
       where: {
-        id: groupid,
+        id: groupId,
       },
       data: {
         member: {
@@ -522,11 +521,11 @@ export const onJoinGroup = async (groupid: string) => {
   }
 }
 
-export const onGetAffiliateLink = async (groupid: string) => {
+export const onGetAffiliateLink = async (groupId: string) => {
   try {
     const affiliate = await client.affiliate.findUnique({
       where: {
-        groupId: groupid,
+        groupId: groupId,
       },
       select: {
         id: true,

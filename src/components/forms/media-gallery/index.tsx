@@ -8,12 +8,12 @@ import { BadgePlus } from "@/icons"
 import { ErrorMessage } from "@hookform/error-message"
 
 type Props = {
-  groupid: string
+  groupId: string
 }
 
-const MediaGalleryForm = ({ groupid }: Props) => {
+const MediaGalleryForm = ({ groupId }: Props) => {
   const { errors, register, onUpdateGallery, isPending } =
-    useMediaGallery(groupid)
+    useMediaGallery(groupId)
 
   return (
     <form onSubmit={onUpdateGallery} className="flex flex-col gap-y-3">

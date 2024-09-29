@@ -6,9 +6,9 @@ import { NoResult } from "@/components/global/search/no-results"
 import { Button } from "@/components/ui/button"
 import { useGroupAbout, useGroupInfo } from "@/hooks/groups"
 import MediaGallery from "../gallery"
-type Props = { userid: string; groupid: string }
+type Props = { userid: string; groupId: string }
 
-const AboutGroup = ({ groupid, userid }: Props) => {
+const AboutGroup = ({ groupId, userid }: Props) => {
   const { group } = useGroupInfo()
   const {
     setJsonDescription,
@@ -28,7 +28,7 @@ const AboutGroup = ({ groupid, userid }: Props) => {
     group.jsonDescription,
     group.htmlDescription,
     group.gallery[0],
-    groupid,
+    groupId,
   )
 
   if (!group)
@@ -77,7 +77,7 @@ const AboutGroup = ({ groupid, userid }: Props) => {
         </div>
       )}
       <MediaGallery
-        groupid={groupid}
+        groupId={groupId}
         gallery={group.gallery}
         onActive={onSetActiveMedia}
         userid={userid}

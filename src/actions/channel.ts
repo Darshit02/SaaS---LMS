@@ -55,7 +55,7 @@ export const onGetChannelInfo = async (channelid: string) => {
 }
 
 export const onCreateNewChannel = async (
-  groupid: string,
+  groupId: string,
   data: {
     id: string
     name: string
@@ -65,7 +65,7 @@ export const onCreateNewChannel = async (
   try {
     const channel = await client.group.update({
       where: {
-        id: groupid,
+        id: groupId,
       },
       data: {
         channel: {

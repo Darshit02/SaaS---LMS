@@ -59,12 +59,12 @@ export const onGetActiveSubscription = async (groupId: string) => {
   }
 }
 
-export const onGetGroupSubscriptionPaymentIntent = async (groupid: string) => {
+export const onGetGroupSubscriptionPaymentIntent = async (groupId: string) => {
   console.log("running")
   try {
     const price = await client.subscription.findFirst({
       where: {
-        groupId: groupid,
+        groupId: groupId,
         active: true,
       },
       select: {
@@ -101,13 +101,13 @@ export const onGetGroupSubscriptionPaymentIntent = async (groupid: string) => {
 }
 
 export const onCreateNewGroupSubscription = async (
-  groupid: string,
+  groupId: string,
   price: string,
 ) => {
   try {
     const subscription = await client.group.update({
       where: {
-        id: groupid,
+        id: groupId,
       },
       data: {
         subscription: {

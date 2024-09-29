@@ -7,13 +7,13 @@ import { useJoinGroup } from "@/hooks/payment"
 import { CardElement } from "@stripe/react-stripe-js"
 
 type JoinGroupPaymentFormProps = {
-  groupid: string
+  groupId: string
 }
 
 export const JoinGroupPaymentForm = ({
-  groupid,
+  groupId,
 }: JoinGroupPaymentFormProps) => {
-  const { isPending, onPayToJoin } = useJoinGroup(groupid)
+  const { isPending, onPayToJoin } = useJoinGroup(groupId)
   return (
     <div className="flex flex-col gap-y-3">
       <CardElement

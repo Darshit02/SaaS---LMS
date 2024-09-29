@@ -13,11 +13,11 @@ import DropDown from "../drop-down"
 
 type UserWidgetProps = {
     image: string
-    groupid?: string
+    groupId?: string
     userid?: string
 }
 
-export const UserAvatar = ({ image, groupid, userid }: UserWidgetProps) => {
+export const UserAvatar = ({ image, groupId, userid }: UserWidgetProps) => {
     const { signOut } = useClerk()
 
     const untrackPresence = async () => {
@@ -47,7 +47,7 @@ export const UserAvatar = ({ image, groupid, userid }: UserWidgetProps) => {
                 className="flex gap-x-3 px-2  hover:text-black  justify-start w-full"
             >
                 <Link
-                    href={`/group/${groupid}/settings`}
+                    href={`/group/${groupId}/settings`}
                     className="flex gap-2 "
                 >
                     <Settings /> Settings

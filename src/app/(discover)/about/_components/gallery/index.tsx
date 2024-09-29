@@ -6,7 +6,7 @@ import { validateURLString } from "@/lib/utils"
 
 type Props = {
   gallery: string[]
-  groupid: string
+  groupId: string
 
   onActive(media: { url: string | undefined; type: string }): void
   userid: string
@@ -17,7 +17,7 @@ const MediaGallery = ({
   gallery,
   groupUserid,
   onActive,
-  groupid,
+  groupId,
   userid,
 }: Props) => {
   return (
@@ -91,7 +91,7 @@ const MediaGallery = ({
             </Card>
           }
         >
-          <MediaGalleryForm groupid={groupid} />
+          <MediaGalleryForm groupId={groupId} />
         </GlassModal>
       ) : (
         <></>

@@ -1,14 +1,14 @@
 "use client"
 import { Input } from "@/components/ui/input"
+import { SIDEBAR_SETTINGS_MENU } from "@/constant/menus"
+import { useChannelInfo } from "@/hooks/channels"
 import { cn } from "@/lib/utils"
 import { Trash } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { IChannels } from "."
-import { SIDEBAR_SETTINGS_MENU } from "@/constant/menus"
-import IconDropDown from "./icon-dropdown"
 import { IconRenderer } from "../icon-renderer"
-import { useChannelInfo } from "@/hooks/channels"
+import IconDropDown from "./icon-dropdown"
 
 
 type Props = {
@@ -23,7 +23,7 @@ type Props = {
       }
     | undefined
   loading: boolean
-  groupid: string
+  groupId: string
   groupUserId: string
   userId: string
 }
@@ -31,7 +31,7 @@ type Props = {
 const SideBarMenu = ({
   channels,
   groupUserId,
-  groupid,
+  groupId,
   loading,
   optimisticChannel,
   userId,
@@ -67,7 +67,7 @@ const SideBarMenu = ({
                     ? !item.path && "text-white"
                     : currentPage === item.path && "text-white",
                 )}
-                href={`/group/${groupid}/settings/${item.path}`}
+                href={`/group/${groupId}/settings/${item.path}`}
                 key={item.id}
               >
                 {item.icon}
@@ -82,7 +82,7 @@ const SideBarMenu = ({
                   ? !item.path && "text-white"
                   : currentPage === item.path && "text-white",
               )}
-              href={`/group/${groupid}/settings/${item.path}`}
+              href={`/group/${groupId}/settings/${item.path}`}
               key={item.id}
             >
               {item.icon}

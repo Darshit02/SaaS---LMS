@@ -6,12 +6,12 @@ import { useActiveGroupSubscription, useJoinFree } from "@/hooks/payment"
 
 type JoinButtonProps = {
   owner: boolean
-  groupid: string
+  groupId: string
 }
 
-export const JoinButton = ({ owner, groupid }: JoinButtonProps) => {
-  const { data } = useActiveGroupSubscription(groupid)
-  const { onJoinFreeGroup } = useJoinFree(groupid)
+export const JoinButton = ({ owner, groupId }: JoinButtonProps) => {
+  const { data } = useActiveGroupSubscription(groupId)
+  const { onJoinFreeGroup } = useJoinFree(groupId)
 
   if (!owner) {
     if (data?.status === 200) {
@@ -26,7 +26,7 @@ export const JoinButton = ({ owner, groupid }: JoinButtonProps) => {
           description="Pay now to join this community"
         >
           <StripeElements>
-            <JoinGroupPaymentForm groupid={groupid} />
+            <JoinGroupPaymentForm groupId={groupId} />
           </StripeElements>
         </GlassModal>
       )

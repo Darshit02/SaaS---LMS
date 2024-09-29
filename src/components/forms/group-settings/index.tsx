@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useGroupSettings } from '@/hooks/groups'
-import React from 'react'
 
 type Props = {
     groupId: string

@@ -3,7 +3,6 @@ import { onGetChannelInfo } from '@/actions/channel'
 import { onGetGroupInfo } from '@/actions/groups'
 import { currentUser } from '@clerk/nextjs/server'
 import { QueryClient } from '@tanstack/react-query'
-import React from 'react'
 
 type Props = {
     params: {
