@@ -1,5 +1,4 @@
 import GroupSettingsForm from '@/components/forms/group-settings'
-import React from 'react'
 
 type Props = {}
 
@@ -7,7 +6,7 @@ const GroupSettingsPage = ({
     params
 }: {
     params : {
-        groupid: string
+        groupId: string
     }
 }) => {
   return (
@@ -21,7 +20,7 @@ const GroupSettingsPage = ({
             </p>
         </div>
         <GroupSettingsForm
-        groupId={params.groupid}
+        groupId={params.groupId}
         />
     </div>
   )

@@ -2,17 +2,16 @@
 import { onCreateNewGroup, onGetGroupChannels, onJoinGroup } from "@/actions/groups"
 import { onCreateNewGroupSubscription, onGetActiveSubscription, onGetGroupSubscriptionPaymentIntent, onGetStripeClientSecret, onTransferCommission } from "@/actions/payment"
 import { CreateGroupSchema } from "@/components/forms/create-group/schema"
+import { CreateGroupSubscriptionSchema } from "@/components/forms/subscription/schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js"
-import { StripeCardElement } from "@stripe/stripe-js"
+import { loadStripe, StripeCardElement } from "@stripe/stripe-js"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
-import { loadStripe } from '@stripe/stripe-js';
 import { z } from "zod"
-import { CreateGroupSubscriptionSchema } from "@/components/forms/subscription/schema"
 
 export const useStripeElements = () => {
   const StripePromise = async () =>
@@ -123,20 +122,20 @@ export const useActiveGroupSubscription = (groupId: string) => {
   return { data }
 }
 
-export const useJoinFree = (groupid: string) => {
+export const useJoinFree = (groupId: string) => {
   const router = useRouter()
   const onJoinFreeGroup = async () => {
-    const member = await onJoinGroup(groupid)
+    const member = await onJoinGroup(groupId)
     if (member?.status === 200) {
-      const channels = await onGetGroupChannels(groupid)
-      router.push(`/group/${groupid}/channel/${channels?.channels?.[0].id}`)
+      const channels = await onGetGroupChannels(groupId)
+      router.push(`/group/${groupId}/channel/${channels?.channels?.[0].id}`)
     }
   }
 
   return { onJoinFreeGroup }
 }
 
-export const useJoinGroup = (groupid: string) => {
+export const useJoinGroup = (groupId: string) => {
   const stripe = useStripe()
   const elements = useElements()
 
@@ -144,7 +143,7 @@ export const useJoinGroup = (groupid: string) => {
 
   const { data: Intent } = useQuery({
     queryKey: ["group-payment-intent"],
-    queryFn: () => onGetGroupSubscriptionPaymentIntent(groupid),
+    queryFn: () => onGetGroupSubscriptionPaymentIntent(groupId),
   })
 
   const { mutate, isPending } = useMutation({
@@ -169,10 +168,10 @@ export const useJoinGroup = (groupid: string) => {
       }
 
       if (paymentIntent?.status === "succeeded") {
-        const member = await onJoinGroup(groupid)
+        const member = await onJoinGroup(groupId)
         if (member?.status === 200) {
-          const channels = await onGetGroupChannels(groupid)
-          router.push(`/group/${groupid}/channel/${channels?.channels?.[0].id}`)
+          const channels = await onGetGroupChannels(groupId)
+          router.push(`/group/${groupId}/channel/${channels?.channels?.[0].id}`)
         }
       }
     },
@@ -185,7 +184,7 @@ export const useJoinGroup = (groupid: string) => {
 
 
 
-export const useGroupSubscription = (groupid: string) => {
+export const useGroupSubscription = (groupId: string) => {
   const {
     register,
     formState: { errors },
@@ -199,7 +198,7 @@ export const useGroupSubscription = (groupid: string) => {
 
   const { mutate, isPending, variables } = useMutation({
     mutationFn: (data: { price: string }) =>
-      onCreateNewGroupSubscription(groupid, data.price),
+      onCreateNewGroupSubscription(groupId, data.price),
     onMutate: () => reset(),
     onSuccess: (data) =>
       toast(data?.status === 200 ? "Success" : "Error", {

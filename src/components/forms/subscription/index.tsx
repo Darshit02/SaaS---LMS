@@ -10,14 +10,14 @@ import { useGroupSubscription } from "@/hooks/payment"
 import { Tag } from "lucide-react"
 
 type GroupSubscriptionFormProps = {
-  groupid: string
+  groupId: string
 }
 
 export const GroupSubscriptionForm = ({
-  groupid,
+  groupId,
 }: GroupSubscriptionFormProps) => {
   const { onCreateNewSubscription, register, errors, isPending, variables } =
-    useGroupSubscription(groupid)
+    useGroupSubscription(groupId)
   return (
     <>
       <GlassModal

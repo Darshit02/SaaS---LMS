@@ -7,11 +7,11 @@ import { cn, truncateString } from "@/lib/utils"
 
 type Props = {
   light?: boolean
-  groupid?: string
+  groupId?: string
   userid?: string
 }
 
-const GroupSideWidget = ({ groupid, light, userid }: Props) => {
+const GroupSideWidget = ({ groupId, light, userid }: Props) => {
   const { group } = useGroupInfo()
 
   return (
@@ -33,9 +33,9 @@ const GroupSideWidget = ({ groupid, light, userid }: Props) => {
         </p>
       </div>
       <Separator orientation="horizontal" className="bg-themeGray" />
-      {groupid && (
+      {groupId && (
         <JoinButton
-          groupid={groupid}
+          groupId={groupId}
           owner={group.userId === userid ? true : false}
         />
       )}

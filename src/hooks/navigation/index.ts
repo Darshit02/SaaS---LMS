@@ -16,7 +16,7 @@ export const useNavigation = () => {
     }
   }
 
-  export const useSideBar = (groupid: string) => {
+  export const useSideBar = (groupId: string) => {
     const { data: groups } = useQuery({
       queryKey: ["user-groups"],
     }) as { data: IGroups }
@@ -27,7 +27,7 @@ export const useNavigation = () => {
   
     const { data: channels } = useQuery({
       queryKey: ["group-channels"],
-      queryFn: () => onGetGroupChannels(groupid),
+      queryFn: () => onGetGroupChannels(groupId),
     })
   
     const client = useQueryClient()
@@ -43,7 +43,7 @@ export const useNavigation = () => {
         createdAt: Date
         groupId: string | null
       }) =>
-        onCreateNewChannel(groupid, {
+        onCreateNewChannel(groupId, {
           id: data.id,
           name: data.name.toLowerCase(),
           icon: data.icon,

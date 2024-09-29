@@ -4,11 +4,11 @@ import { useAllSubscriptions } from "@/hooks/groups"
 import { SubscriptionCard } from "../card"
 
 type SubscriptionsProps = {
-  groupid: string
+  groupId: string
 }
 
-export const Subscriptions = ({ groupid }: SubscriptionsProps) => {
-  const { data, mutate } = useAllSubscriptions(groupid)
+export const Subscriptions = ({ groupId }: SubscriptionsProps) => {
+  const { data, mutate } = useAllSubscriptions(groupId)
 
   return data?.status === 200 && data.subscriptions ? (
     data.subscriptions.map((subscription) => (
