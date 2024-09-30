@@ -4,8 +4,8 @@ import { HtmlParser } from "@/components/global/html-parser"
 
 import { NoResult } from "@/components/global/search/no-results"
 import { useGetPost } from "@/hooks/channels"
-import { PostAuthor } from "../../../[channelId]/_components/post-feed/post-author"
-import { Interactions } from "../../../[channelId]/_components/post-feed/interactions"
+import { Interactions } from "../../../_components/post-feed/interactions"
+import { PostAuthor } from "../../../_components/post-feed/post-author"
 
 type PostInfoProps = {
   id: string
