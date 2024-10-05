@@ -1,12 +1,19 @@
 "use client"
-import { onCreateNewGroup, onGetGroupChannels, onJoinGroup } from "@/actions/groups"
-import { onCreateNewGroupSubscription, onGetActiveSubscription, onGetGroupSubscriptionPaymentIntent, onGetStripeClientSecret, onTransferCommission } from "@/actions/payment"
+import {
+  onCreateNewGroup,
+  onGetGroupChannels,
+  onGetGroupSubscriptions,
+  onJoinGroup,
+} from "@/actions/groups"
+import { onActivateSubscription, onCreateNewGroupSubscription, onGetActiveSubscription, onGetGroupSubscriptionPaymentIntent, onGetStripeClientSecret, onTransferCommission } from "@/actions/payment"
+
 import { CreateGroupSchema } from "@/components/forms/create-group/schema"
 import { CreateGroupSubscriptionSchema } from "@/components/forms/subscription/schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js"
-import { loadStripe, StripeCardElement } from "@stripe/stripe-js"
+import { StripeCardElement, loadStripe } from "@stripe/stripe-js"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -182,8 +189,6 @@ export const useJoinGroup = (groupId: string) => {
   return { onPayToJoin, isPending }
 }
 
-
-
 export const useGroupSubscription = (groupId: string) => {
   const {
     register,
@@ -215,4 +220,49 @@ export const useGroupSubscription = (groupId: string) => {
     mutate({ ...values }),
   )
   return { register, errors, onCreateNewSubscription, isPending, variables }
+}
+
+export const useAllSubscriptions = (groupId: string) => {
+  const { data } = useQuery({
+    queryKey: ["group-subscriptions"],
+    queryFn: () => onGetGroupSubscriptions(groupId),
+  })
+
+  const client = useQueryClient()
+
+  const { mutate } = useMutation({
+    mutationFn: (data: { id: string }) => onActivateSubscription(data.id),
+    onSuccess: (data) =>
+      toast(data?.status === 200 ? "Success" : "Error", {
+        description: data?.message,
+      }),
+    onSettled: async () => {
+      return await client.invalidateQueries({
+        queryKey: ["group-subscriptions"],
+      })
+    },
+  })
+
+  return { data, mutate }
+}
+
+export const useStripeConnect = (groupId: string) => {
+  const [onStripeAccountPending, setOnStripeAccountPending] =
+    useState<boolean>(false)
+
+  const onStripeConnect = async () => {
+    try {
+      setOnStripeAccountPending(true)
+      const account = await axios.get(`/api/stripe/connect?groupId=${groupId}`)
+      if (account) {
+        setOnStripeAccountPending(false)
+        if (account) {
+          window.location.href = account.data.url
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  return { onStripeConnect, onStripeAccountPending }
 }

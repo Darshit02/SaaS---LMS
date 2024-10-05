@@ -3,12 +3,12 @@ import { onGetGroupInfo } from "@/actions/groups"
 import { CourseContentForm } from "@/components/forms/course-content"
 
 type Props = {
-  params: { sectionid: string; groupid: string }
+  params: { sectionid: string; groupId: string }
 }
 
 const CourseModuleSection = async ({ params }: Props) => {
   const user = await onAuthenticatedUser()
-  const group = await onGetGroupInfo(params.groupid)
+  const group = await onGetGroupInfo(params.groupId)
 
   return (
     <CourseContentForm
