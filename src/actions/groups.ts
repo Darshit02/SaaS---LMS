@@ -1,6 +1,7 @@
 "use server"
 import { CreateGroupSchema } from "@/components/forms/create-group/schema"
 import { client } from "@/lib/prisma"
+import axios from "axios"
 import { revalidatePath } from "next/cache"
 import { v4 as uuidv4 } from "uuid"
 import { z } from "zod"
@@ -726,5 +727,83 @@ export const onGetCommentReplies = async (commentid: string) => {
     return { status: 404, message: "No replies found" }
   } catch (error) {
     return { status: 400, message: "Oops something went wrong" }
+  }
+}
+
+export const onGetDomainConfig = async (groupId: string) => {
+  try {
+    //check if domain exists
+    const domain = await client.group.findUnique({
+      where: {
+        id: groupId,
+      },
+      select: {
+        domain: true,
+      },
+    })
+
+    if (domain && domain.domain) {
+      //get config status of domain
+      const status = await axios.get(
+        `https://api.vercel.com/v10/domains/${domain.domain}/config?teamId=${process.env.TEAM_ID_VERCEL}`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.AUTH_BEARER_TOKEN}`,
+            "Content-Type": "application/json",
+          },
+        },
+      )
+
+      return { status: status.data, domain: domain.domain }
+    }
+
+    return { status: 404 }
+  } catch (error) {
+    console.log(error)
+    return { status: 400 }
+  }
+}
+
+
+export const onAddCustomDomain = async (groupId: string, domain: string) => {
+  try {
+      const addDomainHttpUrl = `https://api.vercel.com/v10/projects/${process.env.PROJECT_ID_VERCEL}/domains?teamId=${process.env.TEAM_ID_VERCEL}`
+      //we now insert domain into our vercel project
+      //we make an http request to vercel
+      const response = await axios.post(
+          addDomainHttpUrl,
+          {
+              name: domain,
+          },
+          {
+              headers: {
+                  Authorization: `Bearer ${process.env.AUTH_BEARER_TOKEN}`,
+                  "Content-Type": "application/json",
+              },
+          },
+      )
+
+      if (response) {
+          const newDomain = await client.group.update({
+              where: {
+                  id: groupId,
+              },
+              data: {
+                  domain,
+              },
+          })
+
+          if (newDomain) {
+              return {
+                  status: 200,
+                  message: "Domain successfully added",
+              }
+          }
+      }
+
+      return { status: 404, message: "Group not found" }
+  } catch (error) {
+      console.log(error)
+      return { status: 400, message: "Oops something went wrong" }
   }
 }
