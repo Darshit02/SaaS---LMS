@@ -6,8 +6,6 @@ import { User } from "lucide-react"
 import { redirect } from "next/navigation"
 import React from "react"
 
-type Props = {}
-
 const GroupCreatepage = async ({
     searchParams,
 }: {
