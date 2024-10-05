@@ -46,23 +46,27 @@ const PricingSection = (props: Props) => {
                     <p>Features</p>
                     <span className="flex gap-2 mt-3 items-center">
                         <Check />
-                        Feature number 1
+                        1 Group
                     </span>
                     <span className="flex gap-2 items-center">
                         <Check />
-                        Feature number 1
+                        Anytime Access
                     </span>
                     <span className="flex gap-2 items-center">
                         <Check />
-                        Feature number 1
+                        Unlimited Channels
                     </span>
                     <span className="flex gap-2 items-center">
                         <Check />
-                        Feature number 1
+                        Payment option
                     </span>
                     <span className="flex gap-2 items-center">
                         <Check />
-                        Feature number 1
+                        24/7 Support
+                    </span>
+                    <span className="flex gap-2 items-center">
+                        <Check />
+                        Custom Domain
                     </span>
                 </div>
             </Card>
