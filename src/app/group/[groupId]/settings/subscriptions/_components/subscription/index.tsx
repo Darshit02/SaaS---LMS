@@ -1,6 +1,6 @@
 "use client"
 
-import { useAllSubscriptions } from "@/hooks/groups"
+import { useAllSubscriptions } from "@/hooks/payment"
 import { SubscriptionCard } from "../card"
 
 type SubscriptionsProps = {
