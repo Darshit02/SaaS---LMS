@@ -327,7 +327,7 @@ export const useGroupChatOnline = (userid: string) => {
   
     if (!data) router.push("/explore")
   
-    const { group, status } = data as { status: number; group: GroupStateProps }
+    const { group , status } = data as { status: number; group: GroupStateProps }
   
     if (status !== 200) router.push("/explore")
   
