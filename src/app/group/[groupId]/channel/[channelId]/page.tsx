@@ -1,13 +1,13 @@
 import { onAuthenticatedUser } from '@/actions/auth'
 import { onGetChannelInfo } from '@/actions/channel'
 import { onGetGroupInfo } from '@/actions/groups'
+import GroupSideWidget from '@/components/global/group-side-widget'
 import { currentUser } from '@clerk/nextjs/server'
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
-import { LeaderBoardCard } from '../../_components/leader-board'
-import GroupSideWidget from '@/components/global/group-side-widget'
-import { PostFeed } from './_components/post-feed'
-import CreateNewPost from './_components/create-post'
 import Menu from '../../_components/group-navbar'
+import { LeaderBoardCard } from '../../_components/leader-board'
+import CreateNewPost from './_components/create-post'
+import { PostFeed } from './_components/post-feed'
 
 type Props = {
     params: {
