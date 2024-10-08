@@ -45,8 +45,7 @@ const PricingSection = (props: Props) => {
                 <div className="flex flex-col gap-2 text-[#B4B0AE] mt-5">
                     <p>Features</p>
                     <span className="flex gap-2 mt-3 items-center">
-                        <Check />
-                        1 Group
+                        <Check />1 Group
                     </span>
                     <span className="flex gap-2 items-center">
                         <Check />

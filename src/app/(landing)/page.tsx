@@ -5,20 +5,20 @@ import dynamic from "next/dynamic"
 
 const PricingSection = dynamic(
     () =>
-      import("./_components/pricing-section").then(
-        (component) => component.default,
-      ),
+        import("./_components/pricing-section").then(
+            (component) => component.default,
+        ),
     { ssr: true },
-  )
+)
 
 export default function Home() {
     return (
-       <main className="md:px-10 py-20 flex flex-col gap-36">
-        <div>
-            <CallToAction/>
-            <DashboardSnippet/>
-        </div>
-        <PricingSection/>
-       </main>
+        <main className="md:px-10 py-20 flex flex-col gap-36">
+            <div>
+                <CallToAction />
+                <DashboardSnippet />
+            </div>
+            <PricingSection />
+        </main>
     )
 }
