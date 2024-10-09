@@ -17,8 +17,6 @@ import React from "react"
 import { Navbar } from "../_components/navbar"
 import MobileNav from "./_components/mobile-nav"
 
-
-
 type GroupLayoutProps = {
     children: React.ReactNode
     params: {
@@ -61,16 +59,11 @@ const GroupLayout = async ({ children, params }: GroupLayoutProps) => {
     return (
         <HydrationBoundary state={dehydrate(query)}>
             <div className="flex h-screen md:pt-5">
-                <SideBar groupId={params.groupId} 
-                userid={user.id!}
-                />
+                <SideBar groupId={params.groupId} userid={user.id!} />
                 <div className="md:ml-[300px] flex flex-col flex-1 bg-[#101011] md:rounded-tl-xl overflow-auto border-l-[1px] border-t-[1px] border-[#28282D]">
-                    <Navbar
-                    groupId={params.groupId}
-                    userid={user.id!}
-                    />
+                    <Navbar groupId={params.groupId} userid={user.id!} />
                     {children}
-                    <MobileNav groupId={params.groupId} />  
+                    <MobileNav groupId={params.groupId} />
                 </div>
             </div>
         </HydrationBoundary>

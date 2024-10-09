@@ -6,29 +6,27 @@ import { Google } from "@/icons"
 import { Loader } from "../loader"
 
 type GoogleAuthButtonProps = {
-  method: "signup" | "signin"
+    method: "signup" | "signin"
 }
 
 export const GoogleAuthButton = ({ method }: GoogleAuthButtonProps) => {
-  const { signUpWith, signInWith } = useGoogleAuth()
-  return (
-    <Button
-      {...(method === "signin"
-        ? {
-            onClick: () => signInWith("oauth_google"),
-          }
-        : {
-            onClick: () => signUpWith("oauth_google"),
-          })}
-      className="w-full rounded-2xl flex gap-3 bg-themeBlack border-themeGray"
-      variant="outline"
-    >
-      <Loader loading={false} >
-        <Google   />
-       <span className="text-muted hover:text-black">
-       Google
-        </span> 
-      </Loader>
-    </Button>
-  )
+    const { signUpWith, signInWith } = useGoogleAuth()
+    return (
+        <Button
+            {...(method === "signin"
+                ? {
+                      onClick: () => signInWith("oauth_google"),
+                  }
+                : {
+                      onClick: () => signUpWith("oauth_google"),
+                  })}
+            className="w-full rounded-2xl flex gap-3 bg-themeBlack border-themeGray"
+            variant="outline"
+        >
+            <Loader loading={false}>
+                <Google />
+                <span className="text-muted hover:text-black">Google</span>
+            </Loader>
+        </Button>
+    )
 }
