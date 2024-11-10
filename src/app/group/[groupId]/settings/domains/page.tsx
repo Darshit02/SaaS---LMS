@@ -3,9 +3,9 @@ import { CustomDomainForm } from "@/components/forms/domain"
 import { Card, CardDescription, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
+    HydrationBoundary,
+    QueryClient,
+    dehydrate,
 } from "@tanstack/react-query"
 
 type Props = { params: { groupId: string } }

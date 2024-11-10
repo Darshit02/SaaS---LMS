@@ -1,15 +1,15 @@
 "use client"
 import {
-  onAddCustomDomain,
-  onGetAllGroupMembers,
-  onGetAllUserMessages,
-  onGetDomainConfig,
-  onGetExploreGroup,
-  onGetGroupInfo,
-  onSearchGroups,
-  onSendMessage,
-  onUpDateGroupSettings,
-  onUpdateGroupGallery,
+    onAddCustomDomain,
+    onGetAllGroupMembers,
+    onGetAllUserMessages,
+    onGetDomainConfig,
+    onGetExploreGroup,
+    onGetGroupInfo,
+    onSearchGroups,
+    onSendMessage,
+    onUpDateGroupSettings,
+    onUpdateGroupGallery,
 } from "@/actions/groups"
 import { AddCustomDomainSchema } from "@/components/forms/domain/schema"
 import { GroupSettingsSchema } from "@/components/forms/group-settings/schema"
@@ -19,14 +19,14 @@ import { upload } from "@/lib/upload-care"
 import { supabaseClient, validateURLString } from "@/lib/utils"
 import { onChat } from "@/redux/slices/chat-slices"
 import {
-  onClearList,
-  onInfiniteScroll,
+    onClearList,
+    onInfiniteScroll,
 } from "@/redux/slices/infinite-scroll-slice"
 import { onOnline } from "@/redux/slices/online-member-slice"
 import {
-  GroupStateProps,
-  onClearSearch,
-  onSearch,
+    GroupStateProps,
+    onClearSearch,
+    onSearch,
 } from "@/redux/slices/search-slice"
 import { AppDispatch } from "@/redux/store"
 import { zodResolver } from "@hookform/resolvers/zod"
